@@ -54,9 +54,12 @@ def are_nodes_neighbours_next_to_an_exit(node):
 
     return node, None
     
-def last_resort(pos):
-    print >> sys.stderr, "Guessing... Severing first link for node %d" % pos
-    return links[pos][0]
+def last_resort():
+    print >> sys.stderr, "Guessing... Severing first gateway link I can find"
+    for gateway in gateways:
+        if len(links[gateway]) > 0:
+            return gateway, links[gateway][0]
+    return None, None
 
 def perform_sever(link1, link2):
     print >> sys.stderr, "Severing link %d to %d" % (link1, link2)
@@ -83,6 +86,6 @@ while 1:
         link1_to_sever, link2_to_sever = are_nodes_neighbours_next_to_an_exit(agent_pos)
     
     if link2_to_sever is None:
-        link2_to_sever = last_resort(agent_pos)
+        link1_to_sever, link2_to_sever = last_resort()
         
     perform_sever(link1_to_sever, link2_to_sever)
